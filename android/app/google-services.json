@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "275350243383",
+    "project_id": "anoulack-d185e",
+    "storage_bucket": "anoulack-d185e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275350243383:android:bcb287dfaf07bd6ea7d7b2",
+        "android_client_info": {
+          "package_name": "com.example.pizza_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuidpopWPjNtt_N2ZWdxcenM1XXNWCofw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
