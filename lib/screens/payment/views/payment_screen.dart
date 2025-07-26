@@ -39,7 +39,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final TextEditingController _cardNameController = TextEditingController();
   final TextEditingController _expiryController = TextEditingController();
   final TextEditingController _cvvController = TextEditingController();
+
+  // Controllers สำหรับข้อมูลการจัดส่ง
+  final TextEditingController _deliveryAddressController =
+      TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+
   bool _isProcessing = false;
+  bool _isEditingDelivery = false;
 
   @override
   void initState() {
@@ -48,6 +56,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
     _cardNameController.text = '';
     _expiryController.text = '';
     _cvvController.text = '';
+
+    // ตั้งค่าเริ่มต้นสำหรับข้อมูลการจัดส่ง
+    _deliveryAddressController.text = widget.deliveryAddress;
+    _phoneNumberController.text = widget.phoneNumber;
+    _noteController.text = widget.note;
   }
 
   @override
@@ -56,6 +69,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
     _cardNameController.dispose();
     _expiryController.dispose();
     _cvvController.dispose();
+    _deliveryAddressController.dispose();
+    _phoneNumberController.dispose();
+    _noteController.dispose();
     super.dispose();
   }
 
@@ -84,10 +100,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       await repository.createOrder(
         orderId: orderId,
         total: widget.total,
-        deliveryAddress: widget.deliveryAddress,
+        deliveryAddress: _deliveryAddressController.text,
         deliveryMethod: widget.deliveryMethod,
-        phoneNumber: widget.phoneNumber,
-        note: widget.note,
+        phoneNumber: _phoneNumberController.text,
+        note: _noteController.text,
         items: items,
       );
 
@@ -130,7 +146,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         child: OrderTrackingScreen(
                           orderId: orderId,
                           total: widget.total,
-                          deliveryAddress: widget.deliveryAddress,
+                          deliveryAddress: _deliveryAddressController.text,
                           deliveryMethod: widget.deliveryMethod,
                         ),
                       ),
@@ -144,7 +160,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         },
       );
 
-      // เรียก callback ล้างตะกร้า
       widget.onPaymentSuccess?.call();
     } catch (e) {
       setState(() {
@@ -160,7 +175,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('ตกลง'),
+              child: const Text('ຕົກລົງ'),
             ),
           ],
         ),
@@ -274,7 +289,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: TextField(
                   controller: _expiryController,
                   decoration: const InputDecoration(
-                    labelText: 'วันหมดอายุ (MM/YY)',
+                    labelText: 'ວັນໝົດອາຍຸ (MM/YY)',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.calendar_today),
                   ),
@@ -328,7 +343,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          // หัวตาราง
           const Row(
             children: [
               Expanded(
@@ -336,7 +350,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   child: Text('ຊື່ສິນຄ້າ',
                       style: TextStyle(fontWeight: FontWeight.bold))),
               Expanded(
-                  child: Text('จำนวน',
+                  child: Text('ຈຳນວນ',
                       style: TextStyle(fontWeight: FontWeight.bold))),
               Expanded(
                   child: Text('ລາຄາ',
@@ -344,7 +358,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ],
           ),
           const Divider(),
-          // แสดงสินค้าแต่ละรายการ
           ...widget.items.map((pizza) {
             final quantity = widget.quantities[pizza.pizzaId] ?? 0;
             final price = pizza.price;
@@ -425,53 +438,103 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'ຂໍ້ມູນການຈັດສົ່ງ',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.location_on, color: Colors.grey[600]),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  widget.deliveryMethod == 'delivery'
-                      ? widget.deliveryAddress
-                      : 'ຮັບທີ່ຮ້ານ',
-                  style: const TextStyle(fontSize: 16),
+              const Text(
+                'ຂໍ້ມູນການຈັດສົ່ງ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isEditingDelivery = !_isEditingDelivery;
+                  });
+                },
+                icon: Icon(
+                  _isEditingDelivery ? Icons.save : Icons.edit,
+                  color: Colors.blue,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.phone, color: Colors.grey[600]),
-              const SizedBox(width: 8),
-              Text(
-                widget.phoneNumber,
-                style: const TextStyle(fontSize: 16),
+          const SizedBox(height: 12),
+          if (_isEditingDelivery) ...[
+            // แบบฟอร์มแก้ไข
+            TextFormField(
+              controller: _deliveryAddressController,
+              decoration: const InputDecoration(
+                labelText: 'ທີ່ຢູ່ຈັດສົ່ງ',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.location_on),
               ),
-            ],
-          ),
-          if (widget.note.isNotEmpty) ...[
-            const SizedBox(height: 8),
+              maxLines: 2,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _phoneNumberController,
+              decoration: const InputDecoration(
+                labelText: 'ເບີໂທລະສັບ',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.phone),
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _noteController,
+              decoration: const InputDecoration(
+                labelText: 'ໝາຍເຫດ (ທົດແທນ)',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.note),
+              ),
+              maxLines: 2,
+            ),
+          ] else ...[
+            // แสดงข้อมูลแบบ read-only
             Row(
               children: [
-                Icon(Icons.note, color: Colors.grey[600]),
+                Icon(Icons.location_on, color: Colors.grey[600]),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    widget.note,
+                    widget.deliveryMethod == 'delivery'
+                        ? _deliveryAddressController.text
+                        : 'ຮັບທີ່ຮ້ານ',
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.phone, color: Colors.grey[600]),
+                const SizedBox(width: 8),
+                Text(
+                  _phoneNumberController.text,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            if (_noteController.text.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.note, color: Colors.grey[600]),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _noteController.text,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ],
       ),
@@ -482,9 +545,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     final NumberFormat kipFormat = NumberFormat('#,##0', 'en_US');
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xFF06402B),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: const Color(0xFF06402B),
         title: const Text(
           'ຊຳລະເງິນ',
           style: TextStyle(

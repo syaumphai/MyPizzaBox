@@ -7,7 +7,6 @@ Future<void> main() async {
   // 1. Initialize Firebase
   await Firebase.initializeApp();
 
-  // 2. รายการเมนูและไฟล์รูป
   final menuItems = [
     {'file': 'assets/chicken_wings.png', 'menuId': 'chicken_2'},
     {'file': 'assets/grilled_chicken.png', 'menuId': 'chicken_1'},

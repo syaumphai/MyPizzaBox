@@ -39,7 +39,11 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ກະຕ່າສິນຄ້າ')),
+      backgroundColor: const Color(0xFF06402B),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF06402B),
+        title: const Text('ກະຕ່າສິນຄ້າ'),
+      ),
       body: _cartItems.isEmpty
           ? const Center(
               child: Column(
@@ -50,7 +54,7 @@ class _CartScreenState extends State<CartScreen> {
                   Text('ກະຕ່າສິນຄ້າວ່າງ',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(height: 8),
-                  Text('เพิ่มสินค้าในตะกร้าเพื่อเริ่มสั่งซื้อ',
+                  Text('ເພີ່ມສິນຄ້າໃນກະຕ່າເພື່ອເລີ່ມສັ່ງຊື້',
                       style: TextStyle(color: Colors.grey)),
                 ],
               ),
@@ -80,7 +84,7 @@ class _CartScreenState extends State<CartScreen> {
                       ? Row(
                           children: [
                             Text(
-                              '₭${price}',
+                              '₭$price',
                               style: const TextStyle(
                                 color: Colors.grey,
                                 decoration: TextDecoration.lineThrough,
@@ -105,7 +109,7 @@ class _CartScreenState extends State<CartScreen> {
                             Text(' x$count'),
                           ],
                         )
-                      : Text('₭${price} x$count'),
+                      : Text('₭$price x$count'),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () => _removeItem(index),
@@ -119,7 +123,6 @@ class _CartScreenState extends State<CartScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   print('DEBUG: _cartItems = $_cartItems');
-                  // แปลง _cartItems เป็น List<Pizza>
                   final pizzaList = _cartItems.map((item) {
                     final macrosMap = {
                       'calories': parseInt(item['macros']?['calories']),
@@ -128,11 +131,10 @@ class _CartScreenState extends State<CartScreen> {
                       'carbs': parseInt(item['macros']?['carbs']),
                     };
                     return Pizza(
-                      pizzaId:
-                          item['name']?.toString() ?? '', // ใช้ name เป็น id
+                      pizzaId: item['name']?.toString() ?? '',
                       picture: item['picture']?.toString() ?? '',
                       isVeg: (item['isVeg'] ?? false),
-                      spicy: parseInt(item['spicy']), // <-- ต้องเป็น int
+                      spicy: parseInt(item['spicy']),
                       name: item['name']?.toString() ?? '',
                       description: item['description']?.toString() ?? '',
                       price: parseInt(item['price']),
@@ -140,13 +142,11 @@ class _CartScreenState extends State<CartScreen> {
                       macros: Macros.fromDocument(macrosMap),
                     );
                   }).toList();
-                  // สร้าง quantities map
                   final Map<String, int> quantities = {};
                   for (final item in _cartItems) {
                     final id = item['name']?.toString() ?? '';
                     quantities[id] = (quantities[id] ?? 0) + 1;
                   }
-                  // คำนวณ total ที่ถูกต้อง
                   double total = 0;
                   for (final pizza in pizzaList) {
                     final discount = pizza.discount;
@@ -168,8 +168,7 @@ class _CartScreenState extends State<CartScreen> {
                         items: pizzaList,
                         quantities: quantities,
                         total: total,
-                        deliveryAddress:
-                            '', // ให้กรอกใน PaymentScreen หรือ OrderScreen ต่อ
+                        deliveryAddress: '',
                         phoneNumber: '',
                         note: '',
                         deliveryMethod: '',

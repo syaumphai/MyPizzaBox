@@ -27,7 +27,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   @override
   void initState() {
     super.initState();
-    // ใช้ real-time listener แทนการ load ครั้งเดียว
     _setupRealTimeListener();
   }
 
@@ -50,7 +49,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         print('Status history: $statusHistory');
 
         setState(() {
-          // อัพเดท state โดยตรง
           _currentOrderData = {
             'orderId': orderData['orderId'],
             'currentStatus': status,
@@ -88,7 +86,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
     }
   }
 
-  // เพิ่มตัวแปรสำหรับเก็บข้อมูล real-time
   Map<String, dynamic>? _currentOrderData;
 
   String _getStatusText(OrderStatus status) {
@@ -381,14 +378,11 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
       final repository = OrderTrackingRepository();
       String nextStatusString;
 
-      // กำหนดสถานะถัดไปตามลำดับ
       switch (currentStatus) {
         case OrderStatus.pending:
-          // หลังจาก pending แล้วไป confirmed
           nextStatusString = 'confirmed';
           break;
         case OrderStatus.confirmed:
-          // หลังจาก confirmed แล้วไป preparing เลย
           nextStatusString = 'preparing';
           break;
         case OrderStatus.preparing:
@@ -401,7 +395,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
           nextStatusString = 'delivered';
           break;
         case OrderStatus.delivered:
-          // ถ้าสถานะสุดท้ายแล้ว ไม่ต้องอัพเดท
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('ອໍເດີ້ສຳເລັດແລ້ວ'),
@@ -410,7 +403,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
           );
           return;
         case OrderStatus.cancelled:
-          // ถ้าญกเลิกแล้ว ไม่ต้องอัพเดท
           return;
       }
 
@@ -425,8 +417,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
           backgroundColor: Colors.green,
         ),
       );
-
-      // ไม่ต้อง refresh เพราะใช้ real-time listener แล้ว
     } catch (e) {
       print('Error updating status: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -440,7 +430,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
 
   Widget _buildOrderInfo() {
     final items = _currentOrderData?['items'] as List<dynamic>? ?? [];
-    // คำนวณราคารวม
     num total = 0;
     for (final item in items) {
       final price = item['price'] is num
@@ -524,13 +513,13 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               ),
               child: Column(
                 children: [
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Expanded(
                           child: Text('ຊື່ສິນຄ້າ',
                               style: TextStyle(fontWeight: FontWeight.bold))),
                       SizedBox(width: 8),
-                      Text('จำนวน',
+                      Text('ຈຳນວນ',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       SizedBox(width: 8),
                       Text('ລາຄາ',
@@ -559,10 +548,10 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                       child: Row(
                         children: [
                           Expanded(child: Text(name)),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           if (discountedPrice != null) ...[
                             Text(
-                              '₭${price}',
+                              '₭$price',
                               style: const TextStyle(
                                 color: Colors.grey,
                                 decoration: TextDecoration.lineThrough,
@@ -585,10 +574,10 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                               ),
                             ),
                           ] else
-                            Text('₭${price}'),
-                          SizedBox(width: 8),
+                            Text('₭$price'),
+                          const SizedBox(width: 8),
                           Text('x$quantity'),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text('₭${subtotal.toStringAsFixed(0)}'),
                         ],
                       ),
@@ -797,9 +786,9 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xFF06402B),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: const Color(0xFF06402B),
         title: const Text(
           'ຕິດຕາມອໍເດີ້',
           style: TextStyle(

@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Map<String, dynamic>> cart = [];
 
-  // กำหนดข้อมูลสินค้าในโค้ด (ไม่ใช้ json)
   final List<Map<String, dynamic>> assetMenuItems = [
     {
       "name": "BBQ Chicken Wings",
@@ -284,8 +283,6 @@ class _HomeScreenState extends State<HomeScreen> {
       "description": "Seven Up",
       "macros": {"calories": 100, "proteins": 6, "fat": 2, "carbs": 0}
     },
-
-    // ... เพิ่มสินค้าอื่นๆ ตามต้องการ ...
   ];
 
   Widget _buildBadge(String text, Color color) {
@@ -489,7 +486,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        // แปลง cartItems เป็น List<Pizza> ก่อนส่ง
                         final pizzaList = cartItems
                             .map((item) => Pizza(
                                   pizzaId: item['itemId'],
@@ -553,16 +549,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final NumberFormat kipFormat = NumberFormat('#,##0', 'en_US');
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xFF06402B),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: const Color(0xFF06402B),
         title: const Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.local_pizza, size: 30, color: Colors.red),
-            SizedBox(width: 8),
+            Icon(Icons.local_pizza, size: 24, color: Colors.white),
+            SizedBox(width: 6),
             Text(
-              'PIZZA',
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
+              'MyPizzaBox',
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 20,
+                color: Colors.white,
+              ),
             )
           ],
         ),
@@ -710,7 +711,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       final picture = item['picture'];
                       final discount = item['discount'];
 
-                      // คำนวณราคาหลังหักส่วนลด ถ้ามี discount
                       double? discountedPrice;
                       if (discount != null && discount is num && discount > 0) {
                         discountedPrice = price - (price * (discount / 100));

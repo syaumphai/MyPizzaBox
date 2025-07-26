@@ -29,7 +29,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   // ສະຖານະການເລືອກທີ່ຢູ່
   bool _isDeliveryAddressExpanded = false;
-  String _selectedDeliveryMethod = 'delivery'; // delivery หรือ pickup
+  String _selectedDeliveryMethod = 'delivery';
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _OrderScreenState extends State<OrderScreen> {
     double total = 0;
     for (final pizza in items) {
       final quantity = quantities[pizza.pizzaId] ?? 0;
-      final price = pizza.price * 673; // ราคาเป็นกีบโดยตรง
+      final price = pizza.price * 673;
       total += price * quantity;
     }
     // ເພີ່ມຄ່າຈັດສົ່ງຖ້າເລືອກ delivery
@@ -97,13 +97,13 @@ class _OrderScreenState extends State<OrderScreen> {
     }
 
     // Debug print
-    print('DEBUG: items = ' + items.toString());
-    print('DEBUG: quantities = ' + quantities.toString());
-    print('DEBUG: total = ' + calculateTotal().toString());
-    print('DEBUG: deliveryAddress = ' + _addressController.text);
-    print('DEBUG: phoneNumber = ' + _phoneController.text);
-    print('DEBUG: note = ' + _noteController.text);
-    print('DEBUG: deliveryMethod = ' + _selectedDeliveryMethod);
+    print('DEBUG: items = $items');
+    print('DEBUG: quantities = $quantities');
+    print('DEBUG: total = ${calculateTotal()}');
+    print('DEBUG: deliveryAddress = ${_addressController.text}');
+    print('DEBUG: phoneNumber = ${_phoneController.text}');
+    print('DEBUG: note = ${_noteController.text}');
+    print('DEBUG: deliveryMethod = $_selectedDeliveryMethod');
 
     // ນຳທາງໄປຍັງໜ້າຊຳລະເງິນ
     Navigator.push(
@@ -273,9 +273,9 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     final NumberFormat kipFormat = NumberFormat('#,##0', 'en_US');
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xFF06402B),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: const Color(0xFF06402B),
         title: const Text(
           'ກະຕ່າສິນຄ້າ',
           style: TextStyle(

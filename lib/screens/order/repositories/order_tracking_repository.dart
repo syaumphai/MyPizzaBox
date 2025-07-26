@@ -158,4 +158,19 @@ class OrderTrackingRepository {
       return null;
     });
   }
+
+  Future<void> clearAllOrders() async {
+    try {
+      final querySnapshot = await _firestore.collection('orders').get();
+      
+      final batch = _firestore.batch();
+      for (final doc in querySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      
+      await batch.commit();
+    } catch (e) {
+      throw Exception('ไม่สามารถลบข้อมูลได้: $e');
+    }
+  }
 }

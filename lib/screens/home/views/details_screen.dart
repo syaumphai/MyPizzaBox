@@ -39,15 +39,14 @@ class DetailsScreen extends StatelessWidget {
       discountedPrice = price - (price * (discount / 100));
     }
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xFF06402B),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: const Color(0xFF06402B),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            // รูปภาพ
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width - 40,
@@ -95,7 +94,6 @@ class DetailsScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    // ชื่อสินค้า
                     Text(
                       item['name'],
                       style: const TextStyle(
@@ -111,13 +109,12 @@ class DetailsScreen extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(height: 12),
-                    // ราคา
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (discountedPrice != null) ...[
                           Text(
-                            '₭${price}',
+                            '₭$price',
                             style: const TextStyle(
                               color: Colors.grey,
                               decoration: TextDecoration.lineThrough,
@@ -141,7 +138,7 @@ class DetailsScreen extends StatelessWidget {
                           ),
                         ] else ...[
                           Text(
-                            '₭${price}',
+                            '₭$price',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -181,17 +178,14 @@ class DetailsScreen extends StatelessWidget {
                       height: 50,
                       child: TextButton(
                         onPressed: () async {
-                          // 1. สร้าง order map
                           final order = {
                             'item': item,
                             'price': item['price'],
                             'createdAt': DateTime.now().toIso8601String(),
                           };
-                          // 2. บันทึกลง Firestore
                           final doc = await FirebaseFirestore.instance
                               .collection('orders')
                               .add(order);
-                          // 3. ไปหน้า OrderSummaryScreen
                           // ignore: use_build_context_synchronously
                           Navigator.push(
                             context,
@@ -260,13 +254,13 @@ class OrderSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final item = order['item'] as Map<String, dynamic>;
     return Scaffold(
-      appBar: AppBar(title: const Text('รายละเอียดคำสั่งซื้อ')),
+      appBar: AppBar(title: const Text('ລາຍລະອຽດຄຳສັ່ງຊື້')),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('หมายเลขคำสั่งซื้อ: $orderId',
+            Text('ເລກທີຄຳສັ່ງຊື້: $orderId',
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             Row(
@@ -300,13 +294,13 @@ class OrderSummaryScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            Text('ราคา: ₭${order['price']}',
+            Text('ລາຄາ: ₭${order['price']}',
                 style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
-            Text('เวลาสั่งซื้อ: ${order['createdAt']}',
+            Text('ເວລາສັ່ງຊື້: ${order['createdAt']}',
                 style: const TextStyle(fontSize: 14, color: Colors.grey)),
             const SizedBox(height: 24),
-            const Text('ขอบคุณที่สั่งซื้อ!',
+            const Text('ຂອບໃຈທີ່ສັ່ງຊື້!',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           ],
         ),
