@@ -1,0 +1,12 @@
+[
+  {
+    "name": "BBQ Chicken",
+    "price": 65000,
+    "image": "assets/menu_images/BBQ Chicken.jpeg"
+  },
+  {
+    "name": "Hawaiian",
+    "price": 60000,
+    "image": "assets/menu_images/Hawaiian.jpeg"
+  }
+] 

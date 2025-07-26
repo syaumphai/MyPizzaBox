@@ -1,0 +1,2 @@
+C:/Users/MSI THIN 15/Downloads/pizza-main/android/app/.cxx/Debug/1j1214i3/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/MSI THIN 15/Downloads/pizza-main/android/app/.cxx/Debug/1j1214i3/x86_64/CMakeFiles/rebuild_cache.dir
